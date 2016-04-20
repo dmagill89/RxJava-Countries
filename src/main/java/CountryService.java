@@ -1,4 +1,6 @@
 import java.util.List;
+
+import retrofit2.http.Path;
 import rx.*;
 import retrofit2.http.GET;
 
@@ -7,6 +9,6 @@ import retrofit2.http.GET;
  */
 public interface CountryService {
 
-    @GET("/all")
-    Observable<List<Country>> getCountries();
+    @GET("name/{country}")
+    Observable<Country[]> getCountries(@Path("country") String country);
 }
