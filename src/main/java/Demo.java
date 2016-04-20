@@ -1,4 +1,3 @@
-import java.util.List;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,20 +20,30 @@ public class Demo {
 
         CountryService service = retrofit.create(CountryService.class);
 
-        Observable<Country[]> call = service.getCountries("germany");
-        call.subscribe(new Subscriber<Country[]>() {
-            public void onCompleted() {
+        System.out.println("Main thread: " + Thread.currentThread().getId());
+        Observable<Country[]> call = service.getCountry("germany");
+        call
+//            .subscribeOn(Schedulers.newThread())
+            .observeOn(Schedulers.newThread())
+            .subscribe(new Subscriber<Country[]>() {
+                public void onCompleted() {
+                    System.out.println("Thread finished: " + Thread.currentThread().getId());
+                }
 
-            }
+                public void onError(Throwable throwable) {
+                    System.out.println(throwable.getMessage());
+                }
 
-            public void onError(Throwable throwable) {
-                System.out.println(throwable.getMessage());
-            }
+                public void onNext(Country[] countries) {
+                    System.out.println("received: " + countries[0].name + " on thread " + Thread.currentThread().getId());
+                    String borders[] = countries[0].borders;
+                    for(int i = 0; i < borders.length; i++) {
+                        System.out.println("Border country :" + i + " " + borders[i] + " still on thread: " + Thread.currentThread().getId());
+                    }
+                }
+            });
 
-            public void onNext(Country[] countries) {
-                System.out.println(countries[0].name);
-            }
-        });
+        System.out.println("Finished main :" + Thread.currentThread().getId());
 
     }
 }

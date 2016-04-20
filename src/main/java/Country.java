@@ -7,4 +7,5 @@ public class Country {
     public String capital;
     public String region;
     public long population;
+    public String borders[];
 }

@@ -10,5 +10,11 @@ import retrofit2.http.GET;
 public interface CountryService {
 
     @GET("name/{country}")
-    Observable<Country[]> getCountries(@Path("country") String country);
+    Observable<Country[]> getCountry(@Path("country") String country);
+
+    @GET("all")
+    Observable<Country[]> getCountries();
+
+    @GET("currency/eur")
+    Observable<Country[]> getEuroZoneCountries();
 }
